@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+  
+  {% block title %}Announcement{% endblock %}
+  
+  {% block body %}
+    {% if announcement.type == 'sale' %}
+      <h1>Продажа</h1>
+    {% else %}
+      <h1>Аренда</h1>
+    {% endif %}
+  
+    {% if announcement.photos is not empty %}
+      <ul class="carousel carousel-slider" style="height:700px">
+        {% for photo in announcement.photos %}
+          <li
+            class="carousel-item"
+            style="
+              background-position: center;
+              background-image: url('{{ asset('uploads/photos/' ~ photo) }}');
+              background-size: contain;
+              background-repeat: no-repeat;
+              "
+          >
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  
+    <table class="table">
+      <tbody>
+      <tr>
+        <th>Общая площадь</th>
+        <td>{{ announcement.totalArea }}</td>
+      </tr>
+      <tr>
+        <th>Жилая площадь</th>
+        <td>{{ announcement.livingArea }}</td>
+      </tr>
+      <tr>
+        <th>Площадь кухни</th>
+        <td>{{ announcement.kitchenArea }}</td>
+      </tr>
+      <tr>
+        <th>Этаж / этажность</th>
+        <td>{{ announcement.floor }} / {{ announcement.countFloor }}</td>
+      </tr>
+      <tr>
+        <th>Балкон</th>
+        {% if announcement.idBalcony.title is defined %}
+          <td>{{ announcement.idBalcony.title }}</td>
+        {% else %}
+          <td>{{ announcement.idBalcony }}</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th>Тип дома</th>
+        <td>{{ announcement.idTypeHouse }}</td>
+      </tr>
+      <tr>
+        <th>Количество комнат</th>
+        <td>{{ announcement.idApartmentSize }}</td>
+      </tr>
+      <tr>
+        {% if announcement.type == 'sale' %}
+          <th>Собственность</th>
+          <td>{{ announcement.idOwnership }}</td>
+        {% else %}
+          <th>Срок аренды</th>
+          <td>{{ announcement.idDueDate }}</td>
+        {% endif %}
+      </tr>
+      <tr>
+        <th>Цена</th>
+        <td>{{ announcement.price }} BYN</td>
+      </tr>
+      </tbody>
+    </table>
+  
+    <div>
+      <h4>Описание</h4>
+      <p>{{ announcement.description }}</p>
+    </div>
+  
+    <h4>Контактная информация</h4>
+    <p>ФИО: {{ announcement.idUser.name }}</p>
+    <p><a href="" id="phoneNumberLink" data-phone="{{ announcement.idUser.phone }}">Позвонить</a>
+      {{ announcement.idUser.phone }}</p>
+    <p><a href="mailto:{{ announcement.idUser.email }}">Написать на почту</a> {{ announcement.idUser.email }}</p>
+  
+    <h5>{{ announcement.street }}</h5>
+    <div id="YMapsID" style="width: 100%; height: 550px;"></div>
+  
+    {% if is_granted('ROLE_USER') and app.user.id == announcement.idUser.id %}
+{#    {% if app.user.id is defined and app.user.id == announcement.idUser.id %}#}
+      <a class="btn" href="{{ path('announcement_edit', {'id': announcement.id}) }}">Редактировать</a>
+      <a
+        class="btn"
+        href="javascript:"
+        onclick="document.getElementById('remove_form_{{ announcement.id }}').submit();"
+      >
+        Удалить
+      </a>
+      {{ include('announcement/_delete_form.html.twig') }}
+    {% endif %}
+
+  {% endblock %}
+  
+  {% block javascripts %}
+    <script>
+        const phoneNumberLink = document.querySelector('#phoneNumberLink')
+        phoneNumberLink.href = `tel:${phoneNumberLink.dataset.phone.replace(/\s|[(]|[)]|[-]|/g, '')}`
+
+        ymaps.ready(function () {
+            let myMap = new ymaps.Map('YMapsID', {
+                center: [53.9, 27.56],
+                zoom: 11,
+                controls: ['zoomControl', 'typeSelector', 'fullscreenControl']
+            });
+            let myGeocoder = ymaps.geocode(`Беларусь, Минск, {{ announcement.street }}`)
+            myGeocoder.then(function (res) {
+                myMap.geoObjects.add(res.geoObjects)
+            });
+        });
+    </script>
+  {% endblock %}

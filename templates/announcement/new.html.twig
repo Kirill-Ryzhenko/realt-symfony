@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+  
+  {% if announcement.type == 'sale' %}
+    <h2>Продажа</h2>
+  {% else %}
+    <h2>Аренда</h2>
+  {% endif %}
+  
+  {{ include('announcement/_form.html.twig') }}
+  
+  <div style="margin-bottom: 50px"></div>
+{% endblock %}

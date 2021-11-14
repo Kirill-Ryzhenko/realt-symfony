@@ -1,0 +1,24 @@
+{% if count_page > 1 %}
+  <ul class="pagination">
+    <li {% if currant_page == 1 %} class="disabled" {% else %} class="waves-effect" {% endif %} >
+      {% set params = params|merge({'page': currant_page - 1}) %}
+      <a href="{{ path('announcement_filter', params) }}">
+        <i class="material-icons">chevron_left</i>
+      </a>
+    </li>
+    
+    {% for i in 1..count_page %}
+      <li {% if currant_page == i %} class="active" {% else %} class="waves-effect" {% endif %} >
+        {% set params = params|merge({'page': i}) %}
+        <a href="{{ path('announcement_filter', params) }}">{{ i }}</a>
+      </li>
+    {% endfor %}
+    
+    <li {% if currant_page == count_page %} class="disabled" {% else %} class="waves-effect" {% endif %} >
+      {% set params = params|merge({'page': currant_page + 1}) %}
+      <a href="{{ path('announcement_filter', params) }}">
+        <i class="material-icons">chevron_right</i>
+      </a>
+    </li>
+  </ul>
+{% endif %}

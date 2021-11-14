@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <h1>{{ app.user.name }}</h1>
+  <h3>{{ app.user.email }}</h3>
+  <h3>{{ app.user.phone }}</h3>
+  
+  <a href="/profile/edit/{{ app.user.id }}">Редактировать</a>
+  <br>
+  <a href="/profile/remove/{{ app.user.id }}">Удалить</a>
+  
+  <div class="col s12" style="margin-top: 50px;">
+    <ul class="tabs">
+      <li class="tab col s6"><a class="active" href="#sales">Продажа</a></li>
+      <li class="tab col s6"><a href="#rents">Аренда</a></li>
+    </ul>
+  </div>
+  
+  <div id="sales">
+    {% for announcement in sales %}
+      {{ include('partials/announcementCard.html.twig') }}
+    {% endfor %}
+  </div>
+  
+  <div id="rents">
+    {% for announcement in rents %}
+      {{ include('partials/announcementCard.html.twig') }}
+    {% endfor %}
+  </div>
+{% endblock %}

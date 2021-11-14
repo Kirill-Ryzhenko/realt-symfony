@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Announcement{% endblock %}
+
+{% block body %}
+  <h1>Редактировать объявление</h1>
+  
+  {{ include('announcement/_edit_form.html.twig') }}
+ 
+  <a href="{{ path('profile', {'id': app.user.id}) }}">вернуться в профиль</a>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+      let buttons = document.querySelectorAll('.delete_photo')
+      buttons.forEach(el => {
+          el.addEventListener('click', (e) => {
+              e.target.parentNode.remove();
+          })
+      })
+  </script>
+{% endblock %}

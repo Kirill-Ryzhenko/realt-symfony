@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="row">
+    <div class="col s6 offset-s3">
+      <h1>Редактировать профиль</h1>
+      {{ form_start(form) }}
+        <div class="input-field">
+          {{ form_widget(form.email, {'attr': {'class': 'form-control validate', 'value': app.user.email}}) }}
+          <label for="user_email">Email</label>
+          <span class="helper-text" data-error="Введите email"></span>
+        </div>
+        
+        <div class="input-field">
+          {{ form_widget(form.name, {'attr': {'class': 'form-control validate', 'min': 1, 'value': app.user.name}}) }}
+          <label for="user_name">Введите ФИО</label>
+          <span class="helper-text" data-error="Поле пустое"></span>
+        </div>
+        
+        <div class="input-field">
+          {{ form_widget(form.phone, {'attr': {'class': 'form-control validate', 'value': app.user.phone}}) }}
+          <label for="user_phone">Введите номер телефона</label>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Редактировать</button>
+      {{ form_end(form) }}
+    </div>
+  </div>
+{% endblock %}

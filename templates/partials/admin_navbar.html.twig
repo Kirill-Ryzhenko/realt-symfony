@@ -1,0 +1,32 @@
+<nav>
+  <div class="nav-wrapper">
+    <a href="{{ path('admin_index') }}" class="brand-logo">Администрирование</a>
+    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="{{ path('announcement_filter', {'type': 'sale'}) }}">Продажа</a></li>
+      <li><a href="{{ path('announcement_filter', {'type': 'rent'}) }}">Аренда</a></li>
+      {% if app.user %}
+        <a class="dropdown-trigger btn" href="#" data-target="dropdown1" style="text-transform: lowercase">
+          {{ app.user.email }}
+        </a>
+        <ul id="dropdown1" class="dropdown-content">
+{#          <li><a href="">Добавить администратора</a></li>#}
+          <li><a href="{{ path('admin_properties_all') }}">Изменить список параметров</a></li>
+          <li class="divider" tabindex="-1"></li>
+          <li><a href="{{ path('app_logout') }}">Выйти</a></li>
+        </ul>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+<ul class="sidenav" id="mobile-demo">
+  <li><a href="{{ path('announcement_filter', {'type': 'sale'}) }}">Продажа</a></li>
+  <li><a href="{{ path('announcement_filter', {'type': 'rent'}) }}">Аренда</a></li>
+  {% if app.user %}
+{#    <li><a href="">Добавить администратора</a></li>#}
+    <li><a href="{{ path('admin_properties_all') }}">Изменить список параметров</a></li>
+    <li class="divider" tabindex="-1"></li>
+    <li><a href="{{ path('app_logout') }}">Выйти</a></li>
+  {% endif %}
+</ul>

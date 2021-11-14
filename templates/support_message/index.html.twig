@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Запросы в техподдержку{% endblock %}
+
+{% block stylesheets %}
+  <style>
+      .pivo {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          padding: 30px 10px;
+      }
+
+      .pivo h3 {
+          margin: 15px 30px 15px 0;
+      }
+
+      pre {
+          line-height: 1.5;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+          font-weight: normal;
+          color: rgba(0, 0, 0, 0.87);
+          
+          white-space: break-spaces;
+          white-space: -moz-pre-wrap;
+          word-wrap: break-word; /* Internet Explorer 5.5+ */
+      }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div class="pivo">
+    <h3>Техподдержка</h3>
+    <a class="btn" href="{{ path('support_message_new') }}">Написать в тех поддержку</a>
+  </div>
+  
+  <div class="row">
+    {% for message in messages %}
+      <div>
+        
+        <div class="col s12 m6">
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title activator text-darken-4" style="padding-bottom: 100px;">
+                {{ message.title }} <i class="material-icons right">more_vert</i>
+              </span>
+            </div>
+            <div class="card-reveal">
+                <span class="card-title text-darken-4">{{ message.title }}
+                  <i class="material-icons right">close</i>
+                </span>
+              <pre>{{ message.description }}</pre>
+            </div>
+            <div class="card-action">
+              <a href="{{ path('support_message_edit', {'id': message.id}) }}">Редактировать</a>
+              <a href="{{ path('support_message_remove', {'id': message.id}) }}">Удалить</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

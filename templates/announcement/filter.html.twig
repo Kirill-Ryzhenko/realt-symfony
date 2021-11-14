@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block body %}
+  
+  {% if announcements is not empty %}
+    
+    {{ include('announcement/_filtration_form.html.twig') }}
+    
+    <div class="row">
+      {% if params['type'] == 'sale' %}
+        <h2>Продажа</h2>
+      {% else %}
+        <h2>Аренда</h2>
+      {% endif %}
+      
+      {% for announcement in announcements %}
+        {{ include('partials/announcementCard.html.twig') }}
+      {% endfor %}
+    </div>
+    
+    <div class="pagination" style="margin-top: 30px;">
+      {{ include('partials/pagination.html.twig') }}
+    </div>
+  
+  {% else %}
+    <h2>На данный момент объявлений нет</h2>
+  {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+      const totalAreaRange = document.querySelector('#totalArea.rangeInput');
+      if (totalAreaRange) {
+          noUiSlider.create(totalAreaRange, {
+              start: [
+                {{ params['total_area']['min'] }},
+                {{ params['total_area']['max'] }},
+              ],
+              direction: 'rtl',
+              connect: true,
+              step: 0.01,
+              orientation: 'horizontal',
+              range: {
+                  'min': {{ defaultParameters['min_total_area'] }},
+                  'max': {{ defaultParameters['max_total_area'] }}
+              },
+
+          });
+      }
+
+      const livingAreaRange = document.querySelector('#livingArea.rangeInput');
+      if (livingAreaRange) {
+          noUiSlider.create(livingAreaRange, {
+              start: [
+                {{ params['living_area']['min'] }},
+                {{ params['living_area']['max'] }},
+              ],
+              connect: true,
+              step: 0.01,
+              orientation: 'horizontal',
+              range: {
+                  'min': {{ defaultParameters['min_living_area'] }},
+                  'max': {{ defaultParameters['max_living_area'] }}
+              },
+
+          });
+      }
+
+      const kitchenAreaRange = document.querySelector('#kitchenArea.rangeInput');
+      if (kitchenAreaRange) {
+          noUiSlider.create(kitchenAreaRange, {
+              start: [
+                {{ params['kitchen_area']['min'] }},
+                {{ params['kitchen_area']['max'] }},
+              ],
+              connect: true,
+              step: 0.01,
+              orientation: 'horizontal',
+              range: {
+                  'min': {{ defaultParameters['min_kitchen_area'] }},
+                  'max': {{ defaultParameters['max_kitchen_area'] }}
+              },
+
+          });
+      }
+
+      const priceRange = document.querySelector('#price.rangeInput');
+      if (priceRange) {
+          noUiSlider.create(priceRange, {
+              start: [
+                {{ params['price']['min'] }},
+                {{ params['price']['max'] }}
+              ],
+              connect: true,
+              step: 0.01,
+              orientation: 'horizontal',
+              range: {
+                  'min': {{ defaultParameters['min_price'] }},
+                  'max': {{ defaultParameters['max_price'] }}
+              },
+
+          });
+      }
+
+      let submitButton = document.querySelector("input#submit_filter")
+      submitButton.addEventListener('click', () => {
+          let rangeValues = document.querySelectorAll('#totalArea .noUi-tooltip>span');
+          document.querySelector('[name="total_area[min]"]').value = rangeValues[0].textContent;
+          document.querySelector('[name="total_area[max]"]').value = rangeValues[1].textContent;
+
+          rangeValues = document.querySelectorAll('#livingArea .noUi-tooltip>span');
+          document.querySelector('[name="living_area[min]"]').value = rangeValues[0].textContent;
+          document.querySelector('[name="living_area[max]"]').value = rangeValues[1].textContent;
+
+          rangeValues = document.querySelectorAll('#kitchenArea .noUi-tooltip>span');
+          document.querySelector('[name="kitchen_area[min]"]').value = rangeValues[0].textContent;
+          document.querySelector('[name="kitchen_area[max]"]').value = rangeValues[1].textContent;
+
+          rangeValues = document.querySelectorAll('#price .noUi-tooltip>span');
+          document.querySelector('[name="price[min]"]').value = rangeValues[0].textContent;
+          document.querySelector('[name="price[max]"]').value = rangeValues[1].textContent;
+      })
+  </script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block body %}
+  
+  {% if sales is not empty or rents is not empty %}
+    {% if sales is not empty %}
+      <div class="row">
+        <h2>Продажа</h2>
+        {% for announcement in sales %}
+          {{ include('partials/announcementCard.html.twig') }}
+        {% endfor %}
+      </div>
+    {% else %}
+      <h2>На данный момент ничего не продается</h2>
+    {% endif %}
+    
+    {% if rents is not empty %}
+      <h2>Аренда</h2>
+      <div class="row">
+        {% for announcement in rents %}
+          {{ include('partials/announcementCard.html.twig') }}
+        {% endfor %}
+      </div>
+    {% else %}
+      <h2>На данный момент ничего не сдается в аренду</h2>
+    {% endif %}
+  
+  {% else %}
+    <h1>На данный момент объявлений нет</h1>
+  {% endif %}
+
+{% endblock %}

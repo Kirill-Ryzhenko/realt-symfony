@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  <style>
+      .list-item__properties {
+          display: flex;
+          align-items: center;
+      }
+
+      .list-item__properties .input-field {
+          margin: 0;
+          flex: 1 1 auto;
+      }
+
+      .btn-properties__edit {
+          margin: 0 10px;
+      }
+
+      .btn-properties__add {
+          margin-right: 10px;
+      }
+
+      .disable_input {
+          color: black !important;
+      }
+
+      h5 {
+          border-bottom: 1px solid rgba(160, 160, 160, 0.2);
+          padding-bottom: 15px;
+      }
+  </style>
+{% endblock %}
+
+{% block body %}
+  {% set typeProperties = ['Балкон', 'Тип дома', 'Размер квартиры', 'Срок аренды', 'Собственость'] %}
+  
+  <h1>Параметры объявлений</h1>
+  <div class="row">
+    {% for type in typeProperties %}
+      {% set count = 0 %}
+      {% if properties is defined and properties is not empty %}
+        {% for iter in properties if iter.type == type %}
+          {% set count = count + 1 %}
+        {% endfor %}
+      {% endif %}
+      {{ include('partials/propertieCard.html.twig') }}
+    {% endfor %}
+  </div>
+{% endblock %}

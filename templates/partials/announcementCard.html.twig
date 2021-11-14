@@ -1,0 +1,63 @@
+<div class="card__wrapper-inner col s12 l6">
+  <div class="card">
+    <div class="card-image waves-effect waves-block waves-light"
+      {% if announcement.photos is not empty %}
+         style="
+           background-image:url({{ asset('uploads/photos/' ~ announcement.photos[0]) }});
+           background-position: center;
+           background-size: cover;
+           ">
+      {% endif %}
+      <img
+        class="activator card-image"
+        {% if announcement.photos is not empty %}
+          src="{{ asset('uploads/photos/' ~ announcement.photos[0]) }}"
+        {% endif %}
+        style="max-height: 350px; object-fit: contain; backdrop-filter: blur(10px);"
+        alt=""
+      >
+    </div>
+    
+    <div class="card-content">
+      <span class="card-title activator grey-text text-darken-4">
+        {% if announcement.type == 'sale' %}
+          Продажа
+        {% else %}
+          Аренда
+        {% endif %}
+        <i class="material-icons right">more_vert</i>
+      </span>
+      
+      <h5>Цена: {{ announcement.price }} BYN</h5>
+      <p>Минск, {{ announcement.street }}</p>
+      <span>{{ announcement.idApartmentSize }}</span>
+      <span>{{ announcement.totalArea }} м2</span>
+      <span>{{ announcement.floor }} / {{ announcement.countFloor }} этаж</span>
+    </div>
+    
+    <div
+      class="card-action"
+      style="display: flex; justify-content: space-between;"
+    >
+      <a href="/announcement/{{ announcement.id }}">Перейти к объявлению</a>
+      <div>
+        {% if isProfile is defined %}
+          <a href="{{ path('announcement_edit', {'id': announcement.id}) }}">Редактировать</a>
+          <a
+            href="javascript:"
+            onclick="document.getElementById('remove_form_{{ announcement.id }}').submit();"
+          >
+            Удалить
+          </a>
+          {{ include('announcement/_delete_form.html.twig') }}
+        {% endif %}
+      </div>
+    </div>
+    
+    
+    <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">Описание<i class="material-icons right">close</i></span>
+      <p>{{ announcement.description }}</p>
+    </div>
+  </div>
+</div>

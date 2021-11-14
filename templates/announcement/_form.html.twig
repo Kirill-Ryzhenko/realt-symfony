@@ -1,0 +1,81 @@
+{{ form_start(form) }}
+
+<div class="input-field">
+  {{ form_label(form.street) }}
+  {{ form_widget(form.street) }}
+</div>
+
+<div id="YMapsID" style="width: 100%; "></div>
+
+<div class="input-field">
+  {{ form_label(form.total_area, 'Общая площадь') }}
+  {{ form_widget(form.total_area, {'type': 'number'}) }}
+</div>
+<div class="input-field">
+  {{ form_label(form.living_area, 'Жилая площадь') }}
+  {{ form_widget(form.living_area, {'type': 'number'}) }}
+</div>
+<div class="input-field">
+  {{ form_label(form.kitchen_area, 'Площадь кухни') }}
+  {{ form_widget(form.kitchen_area, {'type': 'number'}) }}
+</div>
+
+<div class="input-field">
+  {{ form_label(form.floor, 'Этаж') }}
+  {{ form_widget(form.floor, {'type': 'number'}) }}
+</div>
+<div class="input-field">
+  {{ form_label(form.countFloor, 'Этажность') }}
+  {{ form_widget(form.countFloor, {'type': 'number'}) }}
+</div>
+
+<div>
+  {{ form_label(form.idBalcony, 'Балкон') }}
+  {{ form_widget(form.idBalcony) }}
+</div>
+<div>
+  {{ form_label(form.idTypeHouse, 'Тип дома') }}
+  {{ form_widget(form.idTypeHouse) }}
+</div>
+<div>
+  {{ form_label(form.idApartmentSize, 'Количество комнат') }}
+  {{ form_widget(form.idApartmentSize) }}
+</div>
+
+{% if announcement.type == 'sale' %}
+  {% do form.idDueDate.setRendered() %}
+  <div>
+    {{ form_label(form.idOwnership, 'Собственность') }}
+    {{ form_widget(form.idOwnership) }}
+  </div>
+{% else %}
+  {% do form.idOwnership.setRendered() %}
+  <div>
+    {{ form_label(form.idDueDate, 'Срок аренды') }}
+    {{ form_widget(form.idDueDate) }}
+  </div>
+{% endif %}
+
+<div class="input-field">
+  {{ form_label(form.description, 'Описание') }}
+  {{ form_widget(form.description) }}
+</div>
+<div class="input-field">
+  {{ form_label(form.price, 'Цена') }}
+  {{ form_widget(form.price) }}
+</div>
+
+<div class="file-field input-field">
+  <div class="btn">
+    {{ form_label(form.photos) }}
+    {{ form_widget(form.photos) }}
+  </div>
+  <div class="file-path-wrapper">
+    <input class="file-path validate" type="text" placeholder="Upload one or more files">
+  </div>
+  {# <img id="blah" src="#" alt="your image"/> #}
+
+</div>
+
+<button type="submit" class="btn btn-primary">Разместить объявление</button>
+{{ form_end(form) }}

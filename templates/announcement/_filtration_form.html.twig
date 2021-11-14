@@ -1,0 +1,162 @@
+<form action="{{ path('announcement_filter', {'type': params['type']}) }}" method="get">
+  <div id="filter" class="modal">
+    <div class="modal-content">
+      <h4 style="padding-bottom: 20px;">Параметры</h4>
+      
+      <div>
+        <label for="apartment_size">Количество комнат</label>
+        <select name="apartment_size" id="apartment_size">
+          <option value="null">Не выбрано</option>
+          {% for iter in select %}
+            {% if iter.type == 'Размер квартиры' %}
+              <option
+                value="{{ iter.id }}"
+                {% if params['apartment_size'] == iter.id %} selected {% endif %}>{{ iter.title }}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      
+      {% if params['type'] == 'rent' %}
+        <div>
+          <label for="due_date">Срок аренды</label>
+          <select name="due_date" id="due_date">
+            <option value="null">Не выбрано</option>
+           {% for iter in select %}
+            {% if iter.type == 'Срок аренды' %}
+              <option
+                value="{{ iter.id }}"
+                {% if params['due_date'] == iter.id %} selected {% endif %}>{{ iter.title }}
+              </option>
+            {% endif %}
+          {% endfor %}
+          </select>
+        </div>
+      {% else %}
+        <div>
+          <label for="ownership">Собственность</label>
+          <select name="ownership" id="ownership">
+            <option value="null">Не выбрано</option>
+            {% for iter in select %}
+            {% if iter.type == 'Собственность' %}
+              <option
+                value="{{ iter.id }}"
+                {% if params['ownership'] == iter.id %} selected {% endif %}>{{ iter.title }}
+              </option>
+            {% endif %}
+          {% endfor %}
+          </select>
+        </div>
+      {% endif %}
+      
+      
+      <div style="margin-top: 20px;">
+        <span>Общая площадь</span>
+        <div id="totalArea" class="rangeInput"></div>
+        <input type="hidden" name="total_area[min]" value="{{ params['total_area']['min'] }}">
+        <input type="hidden" name="total_area[max]" value="{{ params['total_area']['max'] }}">
+      </div>
+      
+      <div style="margin-top: 20px;">
+        <span>Жилая площадь</span>
+        <div id="livingArea" class="rangeInput"></div>
+        <input type="hidden" name="living_area[min]" value="{{ params['living_area']['min'] }}">
+        <input type="hidden" name="living_area[max]" value="{{ params['living_area']['max'] }}">
+      </div>
+      
+      <div style="margin-top: 20px;">
+        <span>Площадь кухни</span>
+        <div id="kitchenArea" class="rangeInput"></div>
+        <input type="hidden" name="kitchen_area[min]" value="{{ params['kitchen_area']['min'] }}">
+        <input type="hidden" name="kitchen_area[max]" value="{{ params['kitchen_area']['max'] }}">
+      </div>
+      
+      <div>
+        <label for="type_house">Тип дома</label>
+        <select name="type_house" id="type_house">
+          <option value="null">Не выбрано</option>
+         {% for iter in select %}
+            {% if iter.type == 'Тип дома' %}
+              <option
+                value="{{ iter.id }}"
+                {% if params['type_house'] == iter.id %} selected {% endif %}>{{ iter.title }}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div>
+        <label for="balcony">Балкон</label>
+        <select name="balcony" id="balcony">
+          <option value="null">Не выбрано</option>
+          {% for iter in select %}
+            {% if iter.type == 'Балкон' %}
+              <option
+                value="{{ iter.id }}"
+                {% if params['balcony'] == iter.id %}
+              selected
+                {% endif %}>{{ iter.title }}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      
+      
+      <div style="margin-top: 20px;">
+        <span>Цена</span>
+        <div id="price" class="rangeInput"></div>
+        <input type="hidden" name="price[min]" value="{{ params['price']['min'] }}">
+        <input type="hidden" name="price[max]" value="{{ params['price']['max'] }}">
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <a href="" class="modal-close waves-effect waves-red btn-flat">Закрыть</a>
+      <input
+        class="modal-close waves-effect waves-green btn-flat"
+        id="submit_filter"
+        type="submit"
+        value="Фильтровать"
+        style="line-height: 36px; cursor: pointer"
+      >
+    </div>
+  </div>
+  
+  <div id="sort" class="modal">
+    <div class="modal-content" style="padding-bottom: 100px;">
+      <h4>Сортировки</h4>
+      
+      <div>
+        <label for="sort">Сортировки</label>
+        <select name="sort" id="sort">
+          <option value="null">Не выбрано</option>
+          <option value="price DESC">От дорогих к дешевым</option>
+          <option value="price ASC">От дешевых к дорогим</option>
+        </select>
+      </div>
+    
+    </div>
+    <div class="modal-footer">
+      <a href="" class="modal-close waves-effect waves-red btn-flat">Закрыть</a>
+      <input
+        class="modal-close waves-effect waves-green btn-flat"
+        id="submit_sort"
+        type="submit"
+        value="Сортировать"
+        style="line-height: 36px;"
+      >
+    </div>
+  </div>
+</form>
+
+<div class="head-panel row" style="margin-top: 40px;">
+  <div class="col s4 ">
+    <a class="waves-effect waves-light btn modal-trigger" style="min-width: 130px;" href="#filter">Параметры</a>
+  </div>
+  <div class="col s4 ">
+    <a class="waves-effect waves-light btn modal-trigger" style="min-width: 130px;" href="#sort">Сортировки</a>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Написать в техподдержку{% endblock %}
+
+{% block body %}
+  {% for error in errors %}
+    <p class="alert">{{ error.message }}</p>
+{% endfor %}
+  <h2>Задайте ваш вопрос</h2>
+  {{ form_start(form) }}
+  <div class="input-field">
+    {{ form_label(form.title, 'Тема') }}
+    {{ form_widget(form.title) }}
+  </div>
+  <div class="input-field">
+    {{ form_label(form.description, 'Описание') }}
+    {{ form_widget(form.description) }}
+  </div>
+  <button type="submit" class="btn btn-primary">Отправить</button>
+  {{ form_end(form) }}
+{% endblock %}
+

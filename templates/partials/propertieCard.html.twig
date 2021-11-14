@@ -1,0 +1,41 @@
+<div class="col s12 xl6">
+  <div class="card">
+    <div class="card-content">
+      <h5>{{ type }}</h5>
+      {% if count != 0 %}
+        {% for property in properties if property.type == type %}
+          <form action="" method="post">
+            <div class="list-item__properties">
+              <div class="input-field" style="">
+                <input class="disable_input" name="new" type="text" disabled value="{{ property.title }}">
+              </div>
+              <button class="btn btn-properties__edit" type="submit"><i class="material-icons">edit</i></button>
+              <a href="{{ path('admin_properties_delete', {'id': property.id}) }}" class="btn red"><i
+                  class="material-icons">delete</i></a>
+            </div>
+          </form>
+        {% endfor %}
+      {% else %}
+        <div
+          style="display: flex;  align-items: center; padding: 10px 0;">
+          <i class="material-icons" style="font-size: 60px; color: rgba(160,160,160,0.7); margin-right: 20px;">not_interested</i>
+          <span>Параметры отсутсвуют</span>
+        </div>
+      {% endif %}
+      
+      <div style="border-top: 1px solid rgba(160,160,160,0.2); padding-top: 15px; margin-top: 15px;">
+        <form action="{{ path('admin_properties_add') }}" method="post">
+          <div class="list-item__properties">
+            <button class="btn btn-properties__add" type="submit"><i class="material-icons">add</i></button>
+            <div class="input-field">
+              <label for="new_{{ type }}">Добавить {{ type }}</label>
+              <input type="text" name="new_property" id="new_{{ type }}" required>
+              <input type="hidden" name="type" value="{{ type }}">
+            </div>
+          </div>
+        </form>
+      
+      </div>
+    </div>
+  </div>
+</div>
