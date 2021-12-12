@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Announcement;
+use App\Entity\Favorite;
 use App\Form\EditUserType;
 use App\Repository\AnnouncementRepository;
 use App\Repository\UserRepository;
@@ -22,19 +23,27 @@ class ProfileController extends AbstractController
     {
         $entityManager   = $this->getDoctrine()->getManager();
         $announcementsDB = $entityManager->getRepository(Announcement::class)->findBy(['id_user' => $id]);
+        $favorites       = $entityManager->getRepository(Favorite::class)->findBy(['id_user' => $id]);
+
+        $var = [];
+        foreach ($favorites as $favi) {
+            $var[] = $favi->getIdAnnouncement();
+        }
 
         $announcements = [
-            'sales' => array_filter($announcementsDB, function ($el) {
+            'sales'     => array_filter($announcementsDB, function ($el) {
                 return $el->getType() === 'sale';
             }),
-            'rents' => array_filter($announcementsDB, function ($el) {
+            'rents'     => array_filter($announcementsDB, function ($el) {
                 return $el->getType() === 'rent';
             }),
+
         ];
 
         return $this->render('profile/profile.html.twig', [
             'sales'     => $announcements['sales'],
             'rents'     => $announcements['rents'],
+            'favorites' => $var,
             'isProfile' => true,
         ]);
     }

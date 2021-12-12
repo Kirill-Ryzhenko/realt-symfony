@@ -90,7 +90,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (e.target.value !== '') {
 
-                    myGeocoder = ymaps.geocode(`Беларусь, Минск,  ${e.target.value}`)
+                    myGeocoder = ymaps.geocode(`Беларусь, Минск,  ${e.target.value}`, { results: 1 })
+
+                    myGeocoder.then(function (res) {
+                        myMap.geoObjects.add(res.geoObjects)
+                    })
+                }
+            }, true)
+
+            const dropdownEl = document.querySelector('ul.autocomplete-content.dropdown-content');
+            dropdownEl.addEventListener('click', (e) => {
+                const streetClick = e.target.textContent;
+
+                myGeocoder.then(function (res) {
+                    myMap.geoObjects.remove(res.geoObjects)
+                })
+
+                if (e.target.value !== '') {
+
+                    myGeocoder = ymaps.geocode(`Беларусь, Минск,  ${streetClick}`, { results: 1 })
 
                     myGeocoder.then(function (res) {
                         myMap.geoObjects.add(res.geoObjects)

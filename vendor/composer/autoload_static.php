@@ -20,6 +20,7 @@ class ComposerStaticInitbd7dd26ab9fb11b4bac06fcbdc1199dc
         '6a47392539ca2329373e0d33e1dba053' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '7e9bd612cc444b3eed788ebbe46263a0' => __DIR__ . '/..' . '/laminas/laminas-zendframework-bridge/src/autoload.php',
+        '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -71,6 +72,7 @@ class ComposerStaticInitbd7dd26ab9fb11b4bac06fcbdc1199dc
             'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\OptionsResolver\\' => 34,
             'Symfony\\Component\\Mime\\' => 23,
+            'Symfony\\Component\\Mailer\\Bridge\\Google\\' => 39,
             'Symfony\\Component\\Mailer\\' => 25,
             'Symfony\\Component\\Intl\\' => 23,
             'Symfony\\Component\\Inflector\\' => 28,
@@ -96,6 +98,7 @@ class ComposerStaticInitbd7dd26ab9fb11b4bac06fcbdc1199dc
             'Symfony\\Bundle\\WebServerBundle\\' => 31,
             'Symfony\\Bundle\\WebProfilerBundle\\' => 33,
             'Symfony\\Bundle\\TwigBundle\\' => 26,
+            'Symfony\\Bundle\\SwiftmailerBundle\\' => 33,
             'Symfony\\Bundle\\SecurityBundle\\' => 30,
             'Symfony\\Bundle\\MonologBundle\\' => 29,
             'Symfony\\Bundle\\MakerBundle\\' => 27,
@@ -311,6 +314,10 @@ class ComposerStaticInitbd7dd26ab9fb11b4bac06fcbdc1199dc
         array (
             0 => __DIR__ . '/..' . '/symfony/mime',
         ),
+        'Symfony\\Component\\Mailer\\Bridge\\Google\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/google-mailer',
+        ),
         'Symfony\\Component\\Mailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/mailer',
@@ -410,6 +417,10 @@ class ComposerStaticInitbd7dd26ab9fb11b4bac06fcbdc1199dc
         'Symfony\\Bundle\\TwigBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/twig-bundle',
+        ),
+        'Symfony\\Bundle\\SwiftmailerBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/swiftmailer-bundle',
         ),
         'Symfony\\Bundle\\SecurityBundle\\' => 
         array (

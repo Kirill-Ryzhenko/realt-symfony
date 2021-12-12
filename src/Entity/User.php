@@ -53,11 +53,6 @@ class User implements UserInterface
     private $name;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $is_banned;
-
-    /**
      * @ORM\OneToMany(targetEntity=Announcement::class, mappedBy="id_user", orphanRemoval=true)
      */
     private $announcements;

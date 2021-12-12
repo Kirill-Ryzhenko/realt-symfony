@@ -266,13 +266,21 @@ final class MakerTestEnvironment
 
     public function runPhpCSFixer(string $file): MakerTestProcess
     {
-        return MakerTestProcess::create(sprintf('php vendor/bin/php-cs-fixer --config=%s fix --dry-run --diff %s', __DIR__.'/../Resources/test/.php_cs.test', $this->path.'/'.$file), $this->rootPath)
+        if (!file_exists(__DIR__.'/../../tools/php-cs-fixer/vendor/bin/php-cs-fixer')) {
+            throw new \Exception('php-cs-fixer not found: run: "composer install --working-dir=tools/php-cs-fixer".');
+        }
+
+        return MakerTestProcess::create(sprintf('php tools/php-cs-fixer/vendor/bin/php-cs-fixer --config=%s fix --dry-run --diff %s', __DIR__.'/../Resources/test/.php_cs.test', $this->path.'/'.$file), $this->rootPath)
                                ->run(true);
     }
 
     public function runTwigCSLint(string $file): MakerTestProcess
     {
-        return MakerTestProcess::create(sprintf('php vendor/bin/twigcs --config ./.twig_cs.dist %s', $this->path.'/'.$file), $this->rootPath)
+        if (!file_exists(__DIR__.'/../../tools/twigcs/vendor/bin/twigcs')) {
+            throw new \Exception('twigcs not found: run: "composer install --working-dir=tools/twigcs".');
+        }
+
+        return MakerTestProcess::create(sprintf('php tools/twigcs/vendor/bin/twigcs --config ./tools/twigcs/.twig_cs.dist %s', $this->path.'/'.$file), $this->rootPath)
                                ->run(true);
     }
 
@@ -460,18 +468,17 @@ echo json_encode($missingDependencies);
 
             switch ($stability) {
                 case 'stable-dev':
-                    $httpClient = HttpClient::create();
-                    $response = $httpClient->request('GET', 'https://symfony.com/versions.json');
-                    $data = $response->toArray();
-
-                    $version = $data['latest'];
+                    $version = ($this->getSymfonyVersions())['latest'];
                     $parts = explode('.', $version);
 
                     $this->targetSkeletonVersion = sprintf('%s.%s.x-dev', $parts[0], $parts[1]);
 
                     break;
                 case 'dev':
-                    $this->targetSkeletonVersion = '5.x-dev';
+                    $version = ($this->getSymfonyVersions())['dev'];
+                    $parts = explode('.', $version);
+
+                    $this->targetSkeletonVersion = sprintf('%s.%s.x-dev', $parts[0], $parts[1]);
 
                     break;
                 default:
@@ -480,5 +487,13 @@ echo json_encode($missingDependencies);
         }
 
         return $this->targetSkeletonVersion;
+    }
+
+    private function getSymfonyVersions(): array
+    {
+        $httpClient = HttpClient::create();
+        $response = $httpClient->request('GET', 'https://symfony.com/versions.json');
+
+        return $response->toArray();
     }
 }

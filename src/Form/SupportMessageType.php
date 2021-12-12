@@ -23,11 +23,10 @@ class SupportMessageType extends AbstractType
             ->add('description', TextareaType::class, [
                 'attr' => [
                     'data-length' => '1000',
-                    'max' => 1000,
+                    'max'         => 1000,
                     'class'       => 'materialize-textarea characterCounter',
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

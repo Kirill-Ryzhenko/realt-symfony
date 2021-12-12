@@ -13,6 +13,7 @@
     <ul class="tabs">
       <li class="tab col s6"><a class="active" href="#sales">Продажа</a></li>
       <li class="tab col s6"><a href="#rents">Аренда</a></li>
+      <li class="tab col s6"><a href="#favorites">Избранное</a></li>
     </ul>
   </div>
   
@@ -24,6 +25,12 @@
   
   <div id="rents">
     {% for announcement in rents %}
+      {{ include('partials/announcementCard.html.twig') }}
+    {% endfor %}
+  </div>
+  
+  <div id="favorites">
+    {% for announcement in favorites %}
       {{ include('partials/announcementCard.html.twig') }}
     {% endfor %}
   </div>

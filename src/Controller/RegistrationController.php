@@ -28,7 +28,7 @@ class RegistrationController extends AbstractController
     {
         if ($this->getUser()) {
              return $this->redirectToRoute('index');
-         }
+        }
 //        if ($authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
 //            return $this->redirectToRoute('index');
 //        }

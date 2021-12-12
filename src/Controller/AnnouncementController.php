@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Announcement;
+use App\Entity\Complaint;
+use App\Entity\Favorite;
 use App\Entity\Properties;
 use App\Entity\User;
 use App\Form\AnnouncementType;
@@ -14,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -23,13 +26,32 @@ class AnnouncementController extends AbstractController
 {
     /**
      * @Route("/{id}", name="announcement_show", methods={"GET"})
+     * @Route("/{id}/{idComplaint}", name="announcement_show_complaint", methods={"GET"})
      */
-    public function show(int $id, AnnouncementRepository $announcementRepository): Response
+    public function show(int $id, AnnouncementRepository $announcementRepository, AuthorizationCheckerInterface $authChecker, UserInterface $user, int $idComplaint = null): Response
     {
+        $entityManager = $this->getDoctrine()->getManager();
+        $announcement  = $announcementRepository->findAnnouncementUser($id);
+        $isFavorite    = false;
+        if ($authChecker->isGranted('ROLE_USER')) {
+            $userId   = $user->getId();
+            $userAuth = $entityManager->getRepository(User::class)->find($userId);
+            $favorite = $entityManager->getRepository(Favorite::class)->findOneBy(['id_user' => $userId, 'id_announcement' => $id]);
+            if ($favorite)
+                $isFavorite = true;
+        }
 
-        $announcement = $announcementRepository->findAnnouncementUser($id);
+        $isBanned  = $announcement[0]->getBanned();
+        $complaint = null;
+        if ($idComplaint != null) {
+            $complaint = $entityManager->getRepository(Complaint::class)->find($idComplaint);
+        }
+
         return $this->render('announcement/show.html.twig', [
             'announcement' => $announcement[0],
+            'isFavorite'   => $isFavorite,
+            'complaint'    => $complaint,
+            'isBanned'     => $isBanned,
         ]);
     }
 

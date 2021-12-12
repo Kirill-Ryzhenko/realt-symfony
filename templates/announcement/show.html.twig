@@ -1,13 +1,27 @@
 {% extends 'base.html.twig' %}
   
   {% block title %}Announcement{% endblock %}
-  
+
   {% block body %}
-    {% if announcement.type == 'sale' %}
-      <h1>Продажа</h1>
-    {% else %}
-      <h1>Аренда</h1>
-    {% endif %}
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      {% if announcement.type == 'sale' %}
+        <h1>Продажа</h1>
+      {% else %}
+        <h1>Аренда</h1>
+      {% endif %}
+    
+      {% if is_granted('ROLE_USER') and announcement.idUser.id != app.user.id %}
+        <form action="{{ path('favorite') }}" method="post">
+          <input type="hidden" name="id_user" value="{{ app.user.id }}">
+          <input type="hidden" name="id_announcement" value="{{ announcement.idUser.id }}">
+          {% if isFavorite %}
+            <button type="submit" class="btn orange lighten-3">Избранное</button>
+          {% else %}
+            <button type="submit" class="btn grey darken-1">Избранное</button>
+          {% endif %}
+        </form>
+      {% endif %}
+    </div>
   
     {% if announcement.photos is not empty %}
       <ul class="carousel carousel-slider" style="height:700px">
@@ -90,8 +104,22 @@
     <h5>{{ announcement.street }}</h5>
     <div id="YMapsID" style="width: 100%; height: 550px;"></div>
   
+    {% if is_granted('ROLE_ADMIN') and complaint != null %}
+      <h5>Жалоба</h5>
+      <p>{{ complaint.description }}</p>
+      <form action="{{ path('complaint-ban', {'id': complaint.id}) }}" method="post">
+        <button type="submit" class="btn pink darken-3">БАН</button>
+      </form>
+    {% endif %}
+  
+    {% if is_granted('ROLE_ADMIN') and isBanned %}
+      <form action="{{ path('complaint-unban', {'id': announcement.id}) }}" method="post">
+        <button type="submit" class="btn pink darken-3">РАЗБАН</button>
+      </form>
+    {% endif %}
+    
     {% if is_granted('ROLE_USER') and app.user.id == announcement.idUser.id %}
-{#    {% if app.user.id is defined and app.user.id == announcement.idUser.id %}#}
+      {# {% if app.user.id is defined and app.user.id == announcement.idUser.id %} #}
       <a class="btn" href="{{ path('announcement_edit', {'id': announcement.id}) }}">Редактировать</a>
       <a
         class="btn"
@@ -101,8 +129,21 @@
         Удалить
       </a>
       {{ include('announcement/_delete_form.html.twig') }}
+    {% elseif is_granted('ROLE_USER') and app.user.id != announcement.idUser.id %}
+      <a class="waves-effect waves-light btn pink darken-3 modal-trigger" style="min-width: 130px;" href="#complaint">Пожаловаться</a>
     {% endif %}
-
+    <div id="complaint" class="modal">
+      <div class="modal-content" style="padding-bottom: 100px;">
+        <h2>Жалоба</h2>
+        <form action="{{ path('complaint') }}" method="post">
+          <input type="hidden" name="id_announcement" value="{{ announcement.id }}">
+          <label for="descript">Текст жалобы</label>
+          <textarea name="description" id="descript" class="materialize-textarea characterCounter" data-length="1000"
+                    maxlength="1000"></textarea>
+          <button type="submit" class="btn pink darken-3">Отправить</button>
+        </form>
+      </div>
+    </div>
   {% endblock %}
   
   {% block javascripts %}

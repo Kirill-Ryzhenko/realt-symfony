@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AnnouncementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
 
 /**
  * @ORM\Entity(repositoryClass=AnnouncementRepository::class)
@@ -94,7 +95,7 @@ class Announcement
     private $photos = [];
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $banned;
 
@@ -281,12 +282,12 @@ class Announcement
         return $this;
     }
 
-    public function getBanned(): ?\DateTimeInterface
+    public function getBanned(): ?bool
     {
         return $this->banned;
     }
 
-    public function setBanned(?\DateTimeInterface $banned): self
+    public function setBanned(bool $banned): self
     {
         $this->banned = $banned;
 

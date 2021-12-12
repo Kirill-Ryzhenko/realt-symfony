@@ -1,6 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  <h1>Главная страница челов</h1>
-
+  {% if complaint is not empty %}
+    <div class="row">
+      <h2>Жалобы</h2>
+      {% for announcement in complaint %}
+            <div>
+              <div class="col s12 m6">
+                <div class="card">
+                  <div class="card-content">
+                    {{ announcement.description }}
+                  </div>
+                  <div class="card-action">
+                    <a href="{{ path('announcement_show_complaint', {'id': announcement.idAnnouncement.id, 'idComplaint': announcement.id }) }}">Ответить</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <h2>На данный момент жалоб нет</h2>
+  {% endif %}
+  
+  {% if announcements is not empty %}
+    <div class="row">
+      <h2>ЗАБАНЕНЫ</h2>
+      {% for announcement in announcements %}
+        {{ include('partials/announcementCard.html.twig') }}
+      {% endfor %}
+    </div>
+  {% else %}
+    <h2>На данный момент банов нет</h2>
+  {% endif %}
 {% endblock %}

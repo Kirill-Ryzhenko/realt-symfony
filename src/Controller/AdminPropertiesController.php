@@ -11,15 +11,15 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/admin/properties", name="admin_properties_")
  */
-    class AdminPropertiesController extends AbstractController
+class AdminPropertiesController extends AbstractController
 {
     /**
      * @Route("/", name="all")
      */
     public function properties(): Response
     {
-        $entityManager     = $this->getDoctrine()->getManager();
-        $properties = $entityManager->getRepository(Properties::class)->findAll();
+        $entityManager = $this->getDoctrine()->getManager();
+        $properties    = $entityManager->getRepository(Properties::class)->findAll();
 
         return $this->render('admin/properties.html.twig', [
             'properties' => $properties,
@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Annotation\Route;
     public function addProperties(Request $request): Response
     {
         $property = new Properties();
-        $query   = $request->request->all();
+        $query    = $request->request->all();
         $property->setTitle($query['new_property']);
         $property->setType($query['type']);
 

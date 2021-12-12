@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Запросы в техподдержку{% endblock %}
+
+{% block stylesheets %}
+  <style>
+      pre {
+          line-height: 1.5;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+          font-weight: normal;
+          color: rgba(0, 0, 0, 0.87);
+          
+          white-space: break-spaces;
+          white-space: -moz-pre-wrap;
+          word-wrap: break-word; /* Internet Explorer 5.5+ */
+      }
+  </style>
+{% endblock %}
+
+{% block body %}
+    <h3>Техподдержка</h3>
+  
+  {% if messages is empty %}
+    <h5>На данный момент не запросов</h5>
+  {% endif %}
+  <div class="row">
+    {% for message in messages %}
+      <div>
+        <div class="col s12 m6">
+          <div class="card">
+            <div class="card-content">
+              <span class="card-title activator text-darken-4" style="padding-bottom: 100px;">
+                {{ message.title }} <i class="material-icons right">more_vert</i>
+              </span>
+            </div>
+            <div class="card-reveal">
+                <span class="card-title text-darken-4">{{ message.title }}
+                  <i class="material-icons right">close</i>
+                </span>
+              <pre>{{ message.description }}</pre>
+            </div>
+            <div class="card-action">
+              <a href="{{ path('admin_support_message_answer', {'id': message.id}) }}">Ответить</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -35,10 +35,12 @@
     <a class="btn" href="{{ path('support_message_new') }}">Написать в тех поддержку</a>
   </div>
   
+  {% if messages is empty %}
+    <h5>На данный момент не запросов</h5>
+  {% endif %}
   <div class="row">
     {% for message in messages %}
       <div>
-        
         <div class="col s12 m6">
           <div class="card">
             <div class="card-content">

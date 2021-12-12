@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ответ техподдержки{% endblock %}
+
+{% block stylesheets %}
+  <style>
+      pre {
+          line-height: 1.5;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+          font-weight: normal;
+          color: rgba(0, 0, 0, 0.87);
+
+          white-space: break-spaces;
+          white-space: -moz-pre-wrap;
+          word-wrap: break-word; /* Internet Explorer 5.5+ */
+      }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <h4>Тема {{ message.title }}</h4>
+  <pre>{{ message.description }}</pre>
+  {{ form_start(form) }}
+    {{ form_label(form.answer, 'Ответ') }}
+    {{ form_widget(form.answer) }}
+    <button type="submit" id="btn_submit_answer" class="btn btn-primary">Отправить</button>
+{{ form_end(form) }}
+{% endblock %}

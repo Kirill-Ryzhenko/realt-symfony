@@ -122,7 +122,7 @@ class Flex implements PluginInterface, EventSubscriberInterface
         $this->config = $composer->getConfig();
         $this->options = $this->initOptions();
 
-        $symfonyRequire = preg_replace('/\.x$/', '.x-dev', getenv('SYMFONY_REQUIRE') ?: ($composer->getPackage()->getExtra()['symfony']['require'] ?? null));
+        $symfonyRequire = preg_replace('/\.x$/', '.x-dev', getenv('SYMFONY_REQUIRE') ?: ($composer->getPackage()->getExtra()['symfony']['require'] ?? ''));
 
         if ($composer2 = version_compare('2.0.0', PluginInterface::PLUGIN_API_VERSION, '<=')) {
             $rfs = Factory::createHttpDownloader($this->io, $this->config);
@@ -307,17 +307,6 @@ class Flex implements PluginInterface, EventSubscriberInterface
         return $backtrace;
     }
 
-    public function lockPlatform()
-    {
-        if (!$this->downloader->isEnabled()) {
-            return; // "symfony/flex" not found in the root composer.json - don't create the symfony.lock file
-        }
-
-        $this->lock->set('php', [
-            'version' => $this->config->get('platform')['php'] ?? (\PHP_MAJOR_VERSION.'.'.\PHP_MINOR_VERSION),
-        ]);
-    }
-
     public function configureProject(Event $event)
     {
         if (!$this->downloader->isEnabled()) {
@@ -407,7 +396,7 @@ class Flex implements PluginInterface, EventSubscriberInterface
         }
 
         // Execute missing recipes
-        $recipes = ScriptEvents::POST_UPDATE_CMD === $event->getName() ? $this->fetchRecipes($this->operations) : [];
+        $recipes = ScriptEvents::POST_UPDATE_CMD === $event->getName() ? $this->fetchRecipes($this->operations, $event instanceof UpdateEvent && $event->reset()) : [];
         $this->operations = [];     // Reset the operation after getting recipes
 
         if (2 === $this->displayThanksReminder) {
@@ -531,7 +520,7 @@ class Flex implements PluginInterface, EventSubscriberInterface
     private function synchronizePackageJson(string $rootDir)
     {
         $rootDir = realpath($rootDir);
-        $vendorDir = trim((new Filesystem())->makePathRelative($this->config->get('vendor-dir'), $rootDir), \DIRECTORY_SEPARATOR);
+        $vendorDir = trim((new Filesystem())->makePathRelative($this->config->get('vendor-dir'), $rootDir), '/');
 
         $synchronizer = new PackageJsonSynchronizer($rootDir, $vendorDir);
 
@@ -700,44 +689,10 @@ class Flex implements PluginInterface, EventSubscriberInterface
         }
     }
 
-    public function updateAutoloadFile()
-    {
-        if (!$platform = $this->lock->get('php')['version'] ?? null) {
-            return;
-        }
-
-        $autoloadFile = $this->config->get('vendor-dir').'/autoload.php';
-
-        if (!file_exists($autoloadFile)) {
-            return;
-        }
-
-        $code = file_get_contents($autoloadFile);
-        $code = substr($code, \strlen("<?php\n"));
-
-        if (false !== strpos($code, 'PHP_VERSION_ID')) {
-            return;
-        }
-
-        $platform = preg_replace('/[^-+.~_\w]/', '', $platform);
-        $version = sprintf('%d%02d00', ...explode('.', $platform.'.0'));
-
-        file_put_contents($autoloadFile, <<<EOPHP
-<?php
-
-if (PHP_VERSION_ID < $version) {
-    echo sprintf("Fatal Error: composer.lock was created for PHP version $platform or higher but the current PHP version is %d.%d.%s.\\n", PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION);
-    exit(1);
-}
-$code
-EOPHP
-        );
-    }
-
     /**
      * @return Recipe[]
      */
-    public function fetchRecipes(array $operations): array
+    public function fetchRecipes(array $operations, bool $reset): array
     {
         if (!$this->downloader->isEnabled()) {
             $this->io->writeError('<warning>Symfony recipes are disabled: "symfony/flex" not found in the root composer.json</>');
@@ -780,7 +735,7 @@ EOPHP
 
             if ($operation instanceof InstallOperation && isset($locks[$name])) {
                 $ref = $this->lock->get($name)['recipe']['ref'] ?? null;
-                if ($ref && ($locks[$name]['recipe']['ref'] ?? null) === $ref) {
+                if (!$reset && $ref && ($locks[$name]['recipe']['ref'] ?? null) === $ref) {
                     continue;
                 }
                 $this->lock->set($name, $locks[$name]);
@@ -799,8 +754,7 @@ EOPHP
                 }
             }
 
-            $noRecipe = !isset($manifests[$name]) || (isset($manifests[$name]['not_installable']) && $manifests[$name]['not_installable']);
-            if ($noRecipe) {
+            if (!isset($manifests[$name])) {
                 $bundles = [];
 
                 if (null === $devPackages) {
@@ -1010,14 +964,13 @@ EOPHP
             ScriptEvents::POST_INSTALL_CMD => 'install',
             ScriptEvents::PRE_UPDATE_CMD => 'configureInstaller',
             ScriptEvents::POST_UPDATE_CMD => 'update',
-            ScriptEvents::POST_AUTOLOAD_DUMP => 'updateAutoloadFile',
             'auto-scripts' => 'executeAutoScripts',
         ];
 
         if (version_compare('2.0.0', PluginInterface::PLUGIN_API_VERSION, '>')) {
             $events += [
                 InstallerEvents::PRE_DEPENDENCIES_SOLVING => [['populateProvidersCacheDir', \PHP_INT_MAX]],
-                InstallerEvents::POST_DEPENDENCIES_SOLVING => [['populateFilesCacheDir', \PHP_INT_MAX], ['lockPlatform']],
+                InstallerEvents::POST_DEPENDENCIES_SOLVING => [['populateFilesCacheDir', \PHP_INT_MAX]],
                 PackageEvents::PRE_PACKAGE_INSTALL => [['populateFilesCacheDir', ~\PHP_INT_MAX]],
                 PackageEvents::PRE_PACKAGE_UPDATE => [['populateFilesCacheDir', ~\PHP_INT_MAX]],
                 PluginEvents::PRE_FILE_DOWNLOAD => 'onFileDownload',
